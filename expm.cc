@@ -1,6 +1,5 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
-#include <boost/numeric/ublas/banded.hpp>      // diagonal matrix
 #include <iostream>
 #include <vector>
 #include <cmath>                   // log2, ceil, pow
@@ -12,7 +11,6 @@ using std::vector;
 
 using boost::numeric::ublas::column_major;
 using boost::numeric::ublas::matrix;
-using boost::numeric::ublas::diagonal_matrix;
 using boost::numeric::ublas::identity_matrix;
 
 ////////////////////////////////////////////////////////////////////////////////
