@@ -5,6 +5,8 @@
 * Tested against Matlab and Python expm
 * Requires Boost and LAPACK
 * Compile Mac: g++ -std=c++11 -I/opt/homebrew/include -framework Accelerate expm.cc main.cc
+    * the -I/opt/homebrew/include points to the boost header files
+    * the -framework Accelerate links against LAPACK.
 
 ## ODE Example
 
