@@ -6,3 +6,28 @@
 * Requires Boost and LAPACK
 * Compile Mac: g++ -std=c++11 -I/opt/homebrew/include -framework Accelerate expm.cc main.cc
 
+## ODE Example
+
+Consider vector $y(t)$ and constant matrix $A$
+
+$$\frac{dy}{dt} = Ay,$$
+$$y(0) = y_0.$$
+
+Let $A$ be written in terms of its eigendecomposition
+$$A = V\Lambda V^{-1}.$$
+Then
+$$\frac{dy}{dt} = V\Lambda V^{-1}y,$$
+$$V^{-1}\frac{dy}{dt} = \Lambda V^{-1}y.$$
+Let $\hat{y}=V^{-1}y$:
+$$\frac{d\hat{y}}{dt} = \Lambda\hat{y}.$$
+This has solution components
+$$\hat{y}_i = \hat{y}_{i,0}e^{\Lambda_{i,i}t},$$
+or as a vector,
+$$\hat{y} = e^{\Lambda t}\hat{y}_0,$$
+where $e^{\Lambda t}$ is diagonal with diagonal elements $e^{\Lambda_{i,i}t}$. Then
+$$y = Ve^{\Lambda t}V^{-1}y_0,$$
+$$y = e^{A t}y_0,$$
+where 
+$$e^{At} = Ve^{\Lambda t}V^{-1}.$$
+
+
