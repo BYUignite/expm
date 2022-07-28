@@ -20,7 +20,7 @@ extern "C" void dgesv_(int *n, int *nrhs, double *A, int *lda, int *ipiv,
 
 //--------- wrapper for dgesv_
 
-void lsolve(matrix<double, column_major>  &A, matrix<double, column_major> &BX){
+void lsolve(matrix<double, column_major, vector<double> >  &A, matrix<double, column_major, vector<double> > &BX){
     int n = A.size1();
     int nrhs = n;
     vector<int> ipiv(n);
@@ -38,7 +38,7 @@ extern "C" void dgebal_(char* JOB, int *n, double *A,
 
 //--------- wrapper for dgebal_
 
-void balanceMatrix(matrix<double, column_major> &A, vector<double> &scale, int &ilo, int &ihi) {
+void balanceMatrix(matrix<double, column_major, vector<double> > &A, vector<double> &scale, int &ilo, int &ihi) {
     int n = A.size1();
     int info;
     char JOB = 'B';           // B=Both scale and permute
@@ -57,7 +57,7 @@ void balanceMatrix(matrix<double, column_major> &A, vector<double> &scale, int &
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void unBalanceMatrix(matrix<double, column_major> &E, vector<double> &scale, int &ilo, int &ihi) {
+void unBalanceMatrix(matrix<double, column_major, vector<double> > &E, vector<double> &scale, int &ilo, int &ihi) {
 
     int n = E.size1();
 
@@ -106,10 +106,10 @@ void unBalanceMatrix(matrix<double, column_major> &E, vector<double> &scale, int
 // D.O. Lignell July 27, 2022
 // Compile Mac: g++ -std=c++11 -I/opt/homebrew/include -framework Accelerate -c expm.cc 
 
-void expm(matrix<double, column_major> &AE) {
+void expm(matrix<double, column_major, vector<double> > &AE) {
 
-    matrix<double, column_major> &A = AE;
-    matrix<double, column_major> &E = AE;
+    matrix<double, column_major, vector<double> > &A = AE;
+    matrix<double, column_major, vector<double> > &E = AE;
 
     int n = A.size1();
 
@@ -139,11 +139,11 @@ void expm(matrix<double, column_major> &AE) {
         else
             C = vector<double>{120.,60.,12.,1.};
 
-        matrix<double, column_major> A2 = prod(A,A);
+        matrix<double, column_major, vector<double> > A2 = prod(A,A);
 
-        matrix<double, column_major> P(n,n,0.0);
-        matrix<double, column_major> U(n,n,0.0);
-        matrix<double, column_major> V(n,n,0.0);
+        matrix<double, column_major, vector<double> > P(n,n,0.0);
+        matrix<double, column_major, vector<double> > U(n,n,0.0);
+        matrix<double, column_major, vector<double> > V(n,n,0.0);
         for(int i=0; i<n; i++) {
             P(i,i) = 1.0;
             U(i,i) = C[1];
@@ -177,17 +177,17 @@ void expm(matrix<double, column_major> &AE) {
                                     40840800.,            960960.,            16380.,
                                          182.,                 1.};
 
-        matrix<double, column_major> A2 = prod(A,A);
-        matrix<double, column_major> A4 = prod(A2,A2);
-        matrix<double, column_major> A6 = prod(A2,A4);
+        matrix<double, column_major, vector<double> > A2 = prod(A,A);
+        matrix<double, column_major, vector<double> > A4 = prod(A2,A2);
+        matrix<double, column_major, vector<double> > A6 = prod(A2,A4);
         identity_matrix<double> I(n);
 
-        matrix<double, column_major> U = prod(A, prod(A6, C[13]*A6 + C[11]*A4 + C[9]*A2) + 
+        matrix<double, column_major, vector<double> > U = prod(A, prod(A6, C[13]*A6 + C[11]*A4 + C[9]*A2) + 
                                                  C[7]*A6 + C[5]*A4 + C[3]*A2 + C[1]*I);
-        matrix<double, column_major> V = prod(A6, C[12]*A6 + C[10]*A4 + C[8]*A2) + 
+        matrix<double, column_major, vector<double> > V = prod(A6, C[12]*A6 + C[10]*A4 + C[8]*A2) + 
                                          C[6]*A6 + C[4]*A4 + C[2]*A2 + C[0]*I;
 
-        matrix<double, column_major> P = V-U;
+        matrix<double, column_major, vector<double> > P = V-U;
         E = V+U;
 
         lsolve(P, E);         // solving PE[:,i] = E[:,i] for each i
