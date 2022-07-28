@@ -49,3 +49,8 @@ where
 $$e^{At} = Ve^{\Lambda t}V^{-1}.$$
 
 
+## Note
+* The boost matricies can by initialized from std::vectors, as, e.g., 
+    ```A.data() = v;``` where ```A``` is a boost matrix and ```v``` is an ```std::vector```.
+    * This assumes ```std::vector<foo> is used as the type of the storage array (third parameter of the boost matrix template) is ```std::vector<<foo>```.
+    * Otherwise, ```std::copy(v.begin(), v.end(), A.data().begin())``` works too, where ```copy``` is from ```#include<algorithm>```.
