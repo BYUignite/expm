@@ -13,6 +13,8 @@ using boost::numeric::ublas::column_major;
 using boost::numeric::ublas::matrix;
 using boost::numeric::ublas::identity_matrix;
 
+typedef matrix<double, column_major, std::vector<double> > bmatrix;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 extern "C" void dgesv_(int *n, int *nrhs, double *A, int *lda, int *ipiv,
@@ -20,7 +22,7 @@ extern "C" void dgesv_(int *n, int *nrhs, double *A, int *lda, int *ipiv,
 
 //--------- wrapper for dgesv_
 
-void lsolve(matrix<double, column_major, vector<double> >  &A, matrix<double, column_major, vector<double> > &BX){
+void lsolve(bmatrix &A, bmatrix &BX){
     int n = A.size1();
     int nrhs = n;
     vector<int> ipiv(n);
@@ -38,7 +40,7 @@ extern "C" void dgebal_(char* JOB, int *n, double *A,
 
 //--------- wrapper for dgebal_
 
-void balanceMatrix(matrix<double, column_major, vector<double> > &A, vector<double> &scale, int &ilo, int &ihi) {
+void balanceMatrix(bmatrix &A, vector<double> &scale, int &ilo, int &ihi) {
     int n = A.size1();
     int info;
     char JOB = 'B';           // B=Both scale and permute
@@ -57,7 +59,7 @@ void balanceMatrix(matrix<double, column_major, vector<double> > &A, vector<doub
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void unBalanceMatrix(matrix<double, column_major, vector<double> > &E, vector<double> &scale, int &ilo, int &ihi) {
+void unBalanceMatrix(bmatrix &E, vector<double> &scale, int &ilo, int &ihi) {
 
     int n = E.size1();
 
@@ -106,10 +108,10 @@ void unBalanceMatrix(matrix<double, column_major, vector<double> > &E, vector<do
 // D.O. Lignell July 27, 2022
 // Compile Mac: g++ -std=c++11 -I/opt/homebrew/include -framework Accelerate -c expm.cc 
 
-void expm(matrix<double, column_major, vector<double> > &AE) {
+void expm(bmatrix &AE) {
 
-    matrix<double, column_major, vector<double> > &A = AE;
-    matrix<double, column_major, vector<double> > &E = AE;
+    bmatrix &A = AE;
+    bmatrix &E = AE;
 
     int n = A.size1();
 
@@ -139,11 +141,11 @@ void expm(matrix<double, column_major, vector<double> > &AE) {
         else
             C = vector<double>{120.,60.,12.,1.};
 
-        matrix<double, column_major, vector<double> > A2 = prod(A,A);
+        bmatrix A2 = prod(A,A);
 
-        matrix<double, column_major, vector<double> > P(n,n,0.0);
-        matrix<double, column_major, vector<double> > U(n,n,0.0);
-        matrix<double, column_major, vector<double> > V(n,n,0.0);
+        bmatrix P(n,n,0.0);
+        bmatrix U(n,n,0.0);
+        bmatrix V(n,n,0.0);
         for(int i=0; i<n; i++) {
             P(i,i) = 1.0;
             U(i,i) = C[1];
@@ -177,17 +179,17 @@ void expm(matrix<double, column_major, vector<double> > &AE) {
                                     40840800.,            960960.,            16380.,
                                          182.,                 1.};
 
-        matrix<double, column_major, vector<double> > A2 = prod(A,A);
-        matrix<double, column_major, vector<double> > A4 = prod(A2,A2);
-        matrix<double, column_major, vector<double> > A6 = prod(A2,A4);
+        bmatrix A2 = prod(A,A);
+        bmatrix A4 = prod(A2,A2);
+        bmatrix A6 = prod(A2,A4);
         identity_matrix<double> I(n);
 
-        matrix<double, column_major, vector<double> > U = prod(A, prod(A6, C[13]*A6 + C[11]*A4 + C[9]*A2) + 
-                                                 C[7]*A6 + C[5]*A4 + C[3]*A2 + C[1]*I);
-        matrix<double, column_major, vector<double> > V = prod(A6, C[12]*A6 + C[10]*A4 + C[8]*A2) + 
-                                         C[6]*A6 + C[4]*A4 + C[2]*A2 + C[0]*I;
+        bmatrix U = prod(A, prod(A6, C[13]*A6 + C[11]*A4 + C[9]*A2) + 
+                            C[7]*A6 + C[5]*A4 + C[3]*A2 + C[1]*I);
+        bmatrix V = prod(A6, C[12]*A6 + C[10]*A4 + C[8]*A2) + 
+                    C[6]*A6 + C[4]*A4 + C[2]*A2 + C[0]*I;
 
-        matrix<double, column_major, vector<double> > P = V-U;
+        bmatrix P = V-U;
         E = V+U;
 
         lsolve(P, E);         // solving PE[:,i] = E[:,i] for each i

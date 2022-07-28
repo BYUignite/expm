@@ -8,11 +8,13 @@ using namespace boost::numeric::ublas;
 using std::cout;
 using std::endl;
 
-void expm(matrix<double, column_major, std::vector<double> > &AE);
+typedef matrix<double, column_major, std::vector<double> > bmatrix;
+
+void expm(bmatrix &AE);
 
 int main () {
 
-    matrix<double, column_major, std::vector<double> > AE(4, 4);
+    bmatrix AE(4,4);
 
     AE(0,0) = 1.e+00; AE(0,1) = 1.e+02; AE(0,2) = 1.e+04; AE(0,3) = 1.e+06;
     AE(1,0) = 1.e-02; AE(1,1) = 1.e+00; AE(1,2) = 1.e+02; AE(1,3) = 1.e+04;
