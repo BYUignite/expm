@@ -134,8 +134,6 @@ void expm_higham05(bmatrix &AeA) {
 
     //------------ For small nrmA, use lower order Padé-Approximations
 
-    //cout << endl << "nrmA = " << nrmA; //doldb
-
     if(nrmA <= 2.1) {
         if(nrmA > 0.95)
             b = vector<double>{17643225600., 8821612800., 2075673600., 302702400.,
@@ -171,7 +169,6 @@ void expm_higham05(bmatrix &AeA) {
         eA = U+V;              // Higham's p here, then solved for r next, which we denote eA as in exp(A)
 
         lsolve(Q, eA);         // solving QeA[:,i] = eA[:,i] for each i
-        cout << endl << "HHHH" << endl;
     }
 
     //------------ For large nrmA
@@ -203,7 +200,6 @@ void expm_higham05(bmatrix &AeA) {
 
         lsolve(Q, eA);
 
-        cout << endl << "si = " << si;
         if(si > 0)             // squaring (undo above divide by power of 2)
             for(int t=1; t<=si; t++)
                 eA = prod(eA,eA);
