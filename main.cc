@@ -10,7 +10,7 @@ using std::endl;
 
 typedef matrix<double, column_major, std::vector<double> > bmatrix;
 
-void expm_najfeld_havel(bmatrix &AE);
+void expm_najfeld_havel(bmatrix &AE, bool doDP=true);
 void expm_higham05(bmatrix &AE);
 
 int main () {

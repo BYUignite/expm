@@ -226,10 +226,9 @@ void expm_higham05(bmatrix &AeA) {
 // Then square exp(2B) d times to get exp(A) = (exp(2B))^(2^d).
 // Najfeld recommends H4 and a given gamma for single precision and H8 and a given gamma for double prec.
 // In implementing this, minimize the number of intermediate matricies needed.
+// doDP = true for double precision (default), false for single precision
 
-void expm_najfeld_havel(bmatrix &AeA) {
-
-    bool doDP = true;                  // true for double precision, false for single precision
+void expm_najfeld_havel(bmatrix &AeA, bool doDP=true) {
 
     bmatrix &A    = AeA;               // using reference variables for notational convenience
     bmatrix &expA = AeA;
